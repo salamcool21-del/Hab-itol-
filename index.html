@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ml">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#153f35">
+  <meta name="description" content="Hab itol - daily habit tracker in Malayalam and English">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <title>Hab itol — Habit Tracker</title>
+  <style>
+    :root{--green:#153f35;--green2:#23765b;--lime:#d6f4b5;--bg:#f4f7f4;--card:#fff;--ink:#172b25;--muted:#64736c;--line:#e1e9e3;--red:#a34343}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans Malayalam",sans-serif}
+    button,input,select{font:inherit} button{cursor:pointer}
+    .app{max-width:680px;margin:auto;padding:18px 15px calc(28px + env(safe-area-inset-bottom))}
+    header{display:flex;align-items:center;gap:12px;background:var(--green);color:white;padding:18px;border-radius:22px}
+    .logo{width:52px;height:52px;border-radius:16px;background:var(--lime);color:var(--green);display:grid;place-items:center;font-size:28px}
+    h1{font-size:22px;line-height:1.1;margin:0 0 5px} header p{margin:0;color:#d4e8de;font-size:13px}
+    .datebar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:18px 0 12px}
+    .datebar label{font-weight:700}.datebar input{border:1px solid var(--line);background:white;border-radius:12px;padding:10px;max-width:155px}
+    .panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:17px;margin:12px 0;box-shadow:0 4px 16px #163c2a08}
+    .progress-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .muted{color:var(--muted);font-size:13px}.percent{font-size:32px;font-weight:800;color:var(--green2);line-height:1.15}.count{font-weight:750}
+    .bar{height:9px;background:#e6eee8;border-radius:99px;overflow:hidden;margin:13px 0 8px}.bar div{height:100%;width:0;background:var(--green2);border-radius:99px;transition:width .2s}
+    h2{font-size:17px;margin:20px 3px 8px}.habit{display:flex;align-items:center;gap:12px;background:white;border:1px solid var(--line);border-radius:16px;padding:13px;margin:9px 0;min-height:74px}
+    .habit.done{border-color:#83c3a3;background:#f1faf4}.habit input{width:23px;height:23px;accent-color:var(--green2);flex-shrink:0}
+    .emoji{font-size:24px;width:32px;text-align:center}.habittext{flex:1;min-width:0}.habitname{font-weight:700;font-size:15px}.detail{font-size:12px;color:var(--muted);margin-top:3px}
+    .section-title{display:flex;align-items:center;justify-content:space-between}.pill{font-size:12px;background:#edf6ef;color:var(--green);padding:6px 10px;border-radius:99px}
+    .addrow{display:flex;gap:8px}.addrow input{min-width:0;flex:1;border:1px solid var(--line);border-radius:12px;padding:12px;background:white}
+    .btn{border:0;border-radius:12px;padding:12px 14px;background:var(--green);color:white;font-weight:700}.btn.secondary{background:#edf3ef;color:var(--green)}.btn.danger{background:#fff0ef;color:var(--red)}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}.actions .btn{flex:1}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{background:#f3f7f3;border-radius:14px;padding:13px 8px;text-align:center}.stat strong{display:block;font-size:22px;color:var(--green)}.stat span{font-size:11px;color:var(--muted)}
+    .history{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.daybox{border-radius:10px;background:#eef2ef;text-align:center;padding:9px 2px;font-size:11px}.daybox b{display:block;font-size:15px;margin-top:3px}.daybox.good{background:#d8f2df;color:#145d3c}
+    footer{text-align:center;color:var(--muted);font-size:11px;margin:22px 0 4px}
+    @media(min-width:520px){.app{padding-top:25px}.habit{padding:15px}.detail{font-size:13px}}
+  </style>
+</head>
+<body>
+<main class="app">
+  <header>
+    <div class="logo">🌱</div>
+    <div><h1>HABITOL</h1><p>ചെറിയ ശീലങ്ങൾ. വലിയ മാറ്റങ്ങൾ.</p></div>
+  </header>
+
+  <div class="datebar">
+    <label for="day">📅 ഇന്നത്തെ തീയതി</label>
+    <input type="date" id="day">
+  </div>
+
+  <section class="panel">
+    <div class="progress-top">
+      <div><div class="muted">ഈ ദിവസത്തെ പുരോഗതി</div><div class="percent" id="percent">0%</div></div>
+      <div style="text-align:right"><div class="count" id="count">0 / 7</div><div class="muted">ശീലങ്ങൾ പൂർത്തിയായി</div></div>
+    </div>
+    <div class="bar"><div id="barfill"></div></div>
+    <div class="muted" id="encourage">ഇന്ന് ഒരു ചെറിയ മുന്നേറ്റം നടത്തൂ. 💚</div>
+  </section>
+
+  <div class="section-title"><h2>ഇന്നത്തെ ശീലങ്ങൾ</h2><span class="pill" id="dateLabel">ഇന്ന്</span></div>
+  <div id="habits"></div>
+
+  <section class="panel">
+    <h2 style="margin:0 0 12px">➕ പുതിയ ശീലം ചേർക്കുക</h2>
+    <form class="addrow" id="addForm">
+      <input id="newHabit" maxlength="70" placeholder="ഉദാ: 10 മിനിറ്റ് വായന" required>
+      <button class="btn" type="submit">ചേർക്കുക</button>
+    </form>
+  </section>
+
+  <section class="panel">
+    <h2 style="margin:0 0 12px">📈 നിന്റെ പുരോഗതി</h2>
+    <div class="stats">
+      <div class="stat"><strong id="todayStat">0%</strong><span>ഇന്നത്തെ നേട്ടം</span></div>
+      <div class="stat"><strong id="weekStat">0%</strong><span>7 ദിവസത്തെ ശരാശരി</span></div>
+      <div class="stat"><strong id="streakStat">0</strong><span>മികച്ച തുടർച്ച (ദിവസം)</span></div>
+    </div>
+    <h2>കഴിഞ്ഞ 7 ദിവസങ്ങൾ</h2>
+    <div class="history" id="history"></div>
+  </section>
+
+  <section class="panel">
+    <h2 style="margin:0 0 12px">💾 ഡാറ്റയും ബാക്കപ്പും</h2>
+    <p class="muted">നിന്റെ ശീലങ്ങൾ ഈ ഫോണിലെ ബ്രൗസറിൽ സേവ് ചെയ്യുന്നു. ബ്രൗസർ ഡാറ്റ മായ്ച്ചാൽ വിവരങ്ങൾ നഷ്ടപ്പെടാം; ഇടയ്ക്കിടെ ബാക്കപ്പ് എടുക്കുക.</p>
+    <div class="actions">
+      <button class="btn secondary" id="exportBtn">ബാക്കപ്പ് ഡൗൺലോഡ്</button>
+      <button class="btn secondary" id="importBtn">ബാക്കപ്പ് തിരികെ കൊണ്ടുവരുക</button>
+      <input type="file" id="importFile" accept="application/json,.json" hidden>
+    </div>
+  </section>
+  <footer>Hab itol · സ്വകാര്യമായി നിന്റെ ഉപകരണത്തിൽ സൂക്ഷിക്കുന്നു</footer>
+</main>
+<script>
+const DEFAULT_HABITS = [
+ {id:"wake",emoji:"🌅",name:"രാവിലെ നേരത്തെ എഴുന്നേൽക്കുക",detail:"ലക്ഷ്യം: രാവിലെ 5:30"},
+ {id:"move",emoji:"🏃",name:"വ്യായാമം / നടത്തം",detail:"കുറഞ്ഞത് 20 മിനിറ്റ്"},
+ {id:"food",emoji:"🥗",name:"ആരോഗ്യകരമായ ഭക്ഷണം",detail:"അധിക മധുരവും എണ്ണയിൽ വറുത്തതും കുറയ്ക്കുക"},
+ {id:"study",emoji:"📚",name:"Kerala PSC പഠനം",detail:"കുറഞ്ഞത് 60 മിനിറ്റ്"},
+ {id:"water",emoji:"💧",name:"ആവശ്യത്തിന് വെള്ളം കുടിക്കുക",detail:"ദിവസം മുഴുവൻ ഇടവിട്ട് കുടിക്കുക"},
+ {id:"phone",emoji:"📵",name:"മൊബൈൽ ഉപയോഗം നിയന്ത്രിക്കുക",detail:"അനാവശ്യ സ്ക്രോളിങ് കുറയ്ക്കുക"},
+ {id:"calm",emoji:"🙏",name:"പ്രാർത്ഥന / മനസ്സമാധാനം",detail:"സ്വന്തമായി കുറച്ച് സമയം"}
+];
+const STORE="habitol-v1";
+const todayISO=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`};
+let data={habits:DEFAULT_HABITS,days:{}};
+try{const saved=JSON.parse(localStorage.getItem(STORE));if(saved&&Array.isArray(saved.habits)&&saved.days)data=saved}catch(e){}
+if(!data.habits.length)data.habits=DEFAULT_HABITS;
+const $=id=>document.getElementById(id);
+$("day").value=todayISO();
+function save(){localStorage.setItem(STORE,JSON.stringify(data));render()}
+function getDay(date){if(!data.days[date])data.days[date]={};return data.days[date]}
+function isDone(date,id){return !!(data.days[date]&&data.days[date][id])}
+function percent(date){const n=data.habits.length;if(!n)return 0;return Math.round(data.habits.filter(h=>isDone(date,h.id)).length/n*100)}
+function dateOffset(date,offset){const d=new Date(date+"T12:00:00");d.setDate(d.getDate()+offset);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
+function render(){
+ const date=$("day").value||todayISO();const done=data.habits.filter(h=>isDone(date,h.id)).length;const n=data.habits.length;const p=percent(date);
+ $("percent").textContent=p+"%";$("count").textContent=`${done} / ${n}`;$("barfill").style.width=p+"%";$("todayStat").textContent=p+"%";
+ $("dateLabel").textContent=date===todayISO()?"ഇന്ന്":new Date(date+"T12:00:00").toLocaleDateString("ml-IN",{day:"numeric",month:"short"});
+ $("encourage").textContent=p===100?"🎉 എല്ലാ ശീലങ്ങളും പൂർത്തിയായി! നന്നായി ചെയ്തു.":p>=50?"💪 നല്ല മുന്നേറ്റം. ബാക്കിയുള്ളവയും പൂർത്തിയാക്കാം.":"ഇന്ന് ഒരു ചെറിയ മുന്നേറ്റം നടത്തൂ. 💚";
+ $("habits").innerHTML="";
+ data.habits.forEach(h=>{
+   const row=document.createElement("label");row.className="habit"+(isDone(date,h.id)?" done":"");
+   const cb=document.createElement("input");cb.type="checkbox";cb.checked=isDone(date,h.id);cb.setAttribute("aria-label",h.name);
+   cb.addEventListener("change",()=>{getDay(date)[h.id]=cb.checked;save()});
+   const em=document.createElement("div");em.className="emoji";em.textContent=h.emoji||"✨";
+   const tx=document.createElement("div");tx.className="habittext";
+   const nm=document.createElement("div");nm.className="habitname";nm.textContent=h.name;
+   const de=document.createElement("div");de.className="detail";de.textContent=h.detail||"സ്വന്തം ലക്ഷ്യം";
+   tx.append(nm,de);row.append(cb,em,tx);$("habits").append(row);
+ });
+ const dates=Array.from({length:7},(_,i)=>dateOffset(date,i-6));
+ const avg=Math.round(dates.reduce((s,d)=>s+percent(d),0)/7);$("weekStat").textContent=avg+"%";
+ const history=$("history");history.innerHTML="";
+ dates.forEach(d=>{const el=document.createElement("div");el.className="daybox"+(percent(d)===100?" good":"");el.innerHTML=`${new Date(d+"T12:00:00").toLocaleDateString("en-IN",{weekday:"short"})}<b>${percent(d)}%</b>`;history.append(el)});
+ let streak=0;let cursor=date;while(streak<366&&percent(cursor)===100){streak++;cursor=dateOffset(cursor,-1)}$("streakStat").textContent=streak;
+}
+$("day").addEventListener("change",render);
+$("addForm").addEventListener("submit",e=>{e.preventDefault();const name=$("newHabit").value.trim();if(!name)return;data.habits.push({id:"custom-"+Date.now(),emoji:"✨",name,detail:"നിന്റെ വ്യക്തിഗത ശീലം"});$("newHabit").value="";save()});
+$("exportBtn").addEventListener("click",()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="habitol-backup-"+todayISO()+".json";a.click();URL.revokeObjectURL(a.href)});
+$("importBtn").addEventListener("click",()=>$("importFile").click());
+$("importFile").addEventListener("change",async e=>{const f=e.target.files[0];if(!f)return;try{const parsed=JSON.parse(await f.text());if(!Array.isArray(parsed.habits)||!parsed.days)throw Error("invalid");if(confirm("നിലവിലെ വിവരങ്ങൾക്ക് പകരം ബാക്കപ്പ് ലോഡ് ചെയ്യട്ടേ?")){data=parsed;save();alert("ബാക്കപ്പ് വിജയകരമായി ലോഡ് ചെയ്തു.")}}catch(err){alert("ഈ ബാക്കപ്പ് ഫയൽ വായിക്കാൻ കഴിഞ്ഞില്ല.")}e.target.value=""});
+render();
+if("serviceWorker" in navigator && location.protocol.startsWith("http"))window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
+</script>
+</body>
+</html>

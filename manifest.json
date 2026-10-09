@@ -1,0 +1,16 @@
+{
+  "id": "./",
+  "name": "Hab itol — Habit Tracker",
+  "short_name": "Hab itol",
+  "description": "Malayalam and English daily habit tracker",
+  "lang": "ml",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f7f4",
+  "theme_color": "#153f35",
+  "orientation": "portrait",
+  "icons": [
+    {"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
